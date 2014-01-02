@@ -35,7 +35,7 @@ describe('A Router', function() {
                     }
                 ],
                 fix: function(found) {
-					return found;
+                    return found;
                 }
             }
         };
@@ -276,9 +276,9 @@ describe('A Router', function() {
                         local: path.join('some', 'dir')
                     }
                 ],
-				fix: function(found) {
-					return found.replace('.js', '.php');
-				}
+                fix: function(found) {
+                    return found.replace('.js', '.php');
+                }
             }
         };
 
@@ -300,7 +300,7 @@ describe('A Router', function() {
                         local: path.join('some', 'dir')
                     }
                 ],
-				skip: ['http://www.some.site/dir/dont.js', 'http://www.some.site/dir/skip/']
+                skip: ['http://www.some.site/dir/dont.js', 'http://www.some.site/dir/skip/']
             }
         };
 
@@ -323,7 +323,7 @@ describe('A Router', function() {
                         local: path.join('some', 'dir')
                     }
                 ],
-				skip: [/http:\/\/www\.some\.site\/dir\/[a-z]+\/[a-z0-9]+\.js/]
+                skip: [/http:\/\/www\.some\.site\/dir\/[a-z]+\/[a-z0-9]+\.js/]
             }
         };
 

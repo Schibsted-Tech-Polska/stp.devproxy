@@ -1,6 +1,15 @@
+# Table of Contents
+* [What is it?](#what-is-it)
+* [Requirements](#requirements)
+* [Installation guide](#installation-guide)
+* [Configuration](#configuration)
+* [Known limitations](#known-limitations)
+* [Contributing](#contributing)
+
 # What is it?
 
 Devproxy is a tool allowing you to serve resources from your local machine as if they came from the external server. Suppose your browser is calling for ```http://www.some.site.com/resources/js/underscore.js``` but is actually getting file from ```C:\site-repo\resources\js\underscore.js```. That way you can have hybrid local/production development environment and essentially develop with production data but on local files.
+
 
 # Requirements:
 
@@ -154,10 +163,10 @@ routes: {
     ],
     fix: function(found) {
         // remove revision version from found file name
-    	if(found.indexOf('?revision=') > -1) {
-			found = found.slice(0, found.indexOf('?revision='));
-		}
-		return found;
+        if(found.indexOf('?revision=') > -1) {
+            found = found.slice(0, found.indexOf('?revision='));
+        }
+        return found;
     }
 }
 ```

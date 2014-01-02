@@ -28,35 +28,35 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 'use strict';
 
 var httpProxy =     require('http-proxy'),
-	http =          require('http'),
-	fs =            require('fs'),
-	mime =          require('mime'),
-	Q =             require('q'),
-	Router =        require('./router'),
-	config =        require('./config'),
-	log =           require('./log'),
+    http =          require('http'),
+    fs =            require('fs'),
+    mime =          require('mime'),
+    Q =             require('q'),
+    Router =        require('./router'),
+    config =        require('./config'),
+    log =           require('./log'),
 
-	router = new Router(config.routes);
+    router = new Router(config.routes);
 
 
 // resources server
 http.createServer(function(req, res) {
-	var remapped = router.remap(req.url);
+    var remapped = router.remap(req.url);
     fs.readFile(remapped, {
         encoding: 'utf8'
     }, function(err, data) {
 
-		if(err) {
-			log.error(err);
-		}
+        if(err) {
+            log.error(err);
+        }
 
-		res.writeHead(200, {
-			'Content-Type': mime.lookup(remapped),
-			'Content-Length': Buffer.byteLength(data)
-		});
+        res.writeHead(200, {
+            'Content-Type': mime.lookup(remapped),
+            'Content-Length': Buffer.byteLength(data)
+        });
 
-		res.end(data);
-	});
+        res.end(data);
+    });
 
 }).listen(config.httpPort);
 log.notice('file server running on port ' + config.httpPort);
@@ -65,45 +65,45 @@ log.notice('file server running on port ' + config.httpPort);
 // proxy server
 httpProxy.createServer(function(req, res, proxy) {
 
-	var remapped = router.remap(req.url),
-		deferred = Q.defer(),
-		buffer = httpProxy.buffer(req);
+    var remapped = router.remap(req.url),
+        deferred = Q.defer(),
+        buffer = httpProxy.buffer(req);
 
-	if(remapped) {
-		fs.exists(remapped, function(exists) {
-			if(exists) {
-				// file remapped and found in filesystem
-				deferred.resolve();
-			}
-			else {
-				// file remapped, but not found on local machine
-				deferred.reject('file not found: ' + remapped);
-			}
-		});
-	}
-	else {
-		// file not remapped, no need to notify
-		deferred.reject();
-	}
+    if(remapped) {
+        fs.exists(remapped, function(exists) {
+            if(exists) {
+                // file remapped and found in filesystem
+                deferred.resolve();
+            }
+            else {
+                // file remapped, but not found on local machine
+                deferred.reject('file not found: ' + remapped);
+            }
+        });
+    }
+    else {
+        // file not remapped, no need to notify
+        deferred.reject();
+    }
 
-	// remapped and found - serve from local machine
-	deferred.promise.then(function() {
-		proxy.proxyRequest(req, res, {
-			host: '127.0.0.1',
-			port: config.httpPort,
-			buffer: buffer
-		});
-	});
+    // remapped and found - serve from local machine
+    deferred.promise.then(function() {
+        proxy.proxyRequest(req, res, {
+            host: '127.0.0.1',
+            port: config.httpPort,
+            buffer: buffer
+        });
+    });
 
-	// not remapped or not found - serve from original host
-	deferred.promise.catch(function(reason) {
-		log.warning(reason);
-		proxy.proxyRequest(req, res, {
-			host: req.headers.host,
-			port: 80,
-			buffer: buffer
-		});
-	});
+    // not remapped or not found - serve from original host
+    deferred.promise.catch(function(reason) {
+        log.warning(reason);
+        proxy.proxyRequest(req, res, {
+            host: req.headers.host,
+            port: 80,
+            buffer: buffer
+        });
+    });
 
 }).listen(config.proxyPort);
 log.notice('proxy server running on port ' + config.proxyPort);

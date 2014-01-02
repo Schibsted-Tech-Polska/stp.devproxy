@@ -8,7 +8,7 @@ module.exports = (function() {
 
     var Router = function(routes) {
 
-		// check routes configuration during construction
+        // check routes configuration during construction
         var validationErrors = Router.validateRoutes(routes);
 
         if(validationErrors.length === 0) {
@@ -22,7 +22,7 @@ module.exports = (function() {
         }
     };
 
-	// helper method for iterating through routes
+    // helper method for iterating through routes
     Router.prototype.eachRoute = function(callback) {
         
         Object.keys(this._routes).forEach(function(route) {
@@ -49,9 +49,9 @@ module.exports = (function() {
 
     };
 
-	// route should conform to following rules:
-	// - it's "remote" property representing path to resource on remote server should be either string or regular expression
-	// - it's "local" property representing file system path to resource on local machine should be either string or function
+    // route should conform to following rules:
+    // - it's "remote" property representing path to resource on remote server should be either string or regular expression
+    // - it's "local" property representing file system path to resource on local machine should be either string or function
     Router.validateRewrites = function(routeName, route, errors) {
     
         errors = errors || [];
@@ -75,7 +75,7 @@ module.exports = (function() {
 
     };
 
-	// custom fix function used for modifying file name before serving should be, um, function
+    // custom fix function used for modifying file name before serving should be, um, function
     Router.validateFix = function(routeName, route, errors) {
         
         errors = errors || [];
@@ -88,7 +88,7 @@ module.exports = (function() {
         return errors;
     };
 
-	// skip should be array of strings or regular expressions pointing to remote resources that we want to exclude from rewriting
+    // skip should be array of strings or regular expressions pointing to remote resources that we want to exclude from rewriting
     Router.validateSkip = function(routeName, route, errors) {
         
         errors = errors || [];
@@ -101,8 +101,8 @@ module.exports = (function() {
         return errors;
     };
 
-	// main method for mapping remote to local files
-	// checks if url points to resource that should be mapped and shouldn't be skipped
+    // main method for mapping remote to local files
+    // checks if url points to resource that should be mapped and shouldn't be skipped
     Router.prototype.remap = function(url) {
 
         var match,
@@ -111,14 +111,14 @@ module.exports = (function() {
         match = this.matchByRemote(url);
         if(match && !this.isSkipped(url, match.route.skip)) {
             result = this.rewriteByLocal(url, match.rewrite);
-			if(result && match.route.fix) {
-				try {
-					result = match.route.fix(result);
-				}
-				catch(e) {
-					log.error('in custom fix function, ' + e);
-				}
-			}
+            if(result && match.route.fix) {
+                try {
+                    result = match.route.fix(result);
+                }
+                catch(e) {
+                    log.error('in custom fix function, ' + e);
+                }
+            }
         }
 
         return result;
