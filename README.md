@@ -16,7 +16,8 @@ PC version comes as a self-installing executable, Mac users will have to unzip t
 ```
 ./configure
 make
-sudo make install```
+sudo make install
+```
 
 ### 2. Clone stp.devproxy
 In your Git client clone this repository to whatever directory you'd like the proxy to be:
