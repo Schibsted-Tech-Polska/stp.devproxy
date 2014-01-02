@@ -13,7 +13,8 @@ Devproxy is a tool allowing you to serve resources from your local machine as if
 ### 1. Install Node
 Go to [nodejs.org](http://nodejs.org/).
 PC version comes as a self-installing executable, Mac users will have to unzip the package and execute following commands from terminal:
-```./configure
+```
+./configure
 make
 sudo make install```
 
@@ -140,7 +141,7 @@ Function recieves one parameter which is full URL to remote resource and you can
 
 Aside from mapping, you sometimes want to further modify found resource path.
 Consider example: you're using directory-based mapping and your server gives you a remote path: ```http://www.example.com/resources/js/underscore.js?revision=de957d```
-When it gets remapped, it will point to ```c:\git\example\src\resources\js\underscore.js?revision=de957d```, which is wrong, we don't want that ?revision=de957d part. Way to handle it is to include fix function:
+When it gets remapped, it will point to ```c:\git\example\src\resources\js\underscore.js?revision=de957d```, which is wrong, we don't want that ```?revision=de957d part```. Way to handle it is to include fix function:
 
 ```javascript
 routes: {
@@ -162,7 +163,7 @@ routes: {
 
 # Known limitations
 
-* No SSL/HTTPS support (hopefully yet), requests that require SSL will just timeout after a while. This also means that VPN clients may cause trouble.
+* No SSL/HTTPS support (yet), requests that require SSL will just timeout after a while. This also means that VPN clients may cause trouble.
 
 
 # Contributing
