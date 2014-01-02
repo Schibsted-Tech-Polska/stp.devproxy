@@ -21,7 +21,7 @@ sudo make install
 
 ### 2. Clone stp.devproxy
 In your Git client clone this repository to whatever directory you'd like the proxy to be:
-```git clone http://...```
+```git clone https://github.com/Schibsted-Tech-Polska/stp.devproxy.git```
 
 ### 3. Install dependencies 
 Use command line or terminal and run this command inside project directory: ```npm install```
