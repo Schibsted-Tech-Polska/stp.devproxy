@@ -73,12 +73,16 @@ To set up which messages should be logged, use log property.
 
 ## Setting up routes
 
-Routes are set up in routes property. They consist of unique route names (that are object properties), like this:
+Routes are set up in routes property. They consist of unique route groups (that are objects), like this:
 ```javascript
 routes: {
-    exampleProject: { ... },
-    anotherExample: { ... },
-    ...
+    exampleProject: {
+        rewrite: [ ... rewrite rules ... ]
+    },
+    anotherExample: {
+        rewrite: [ ... rewrite rules ... ]
+    },
+    ... more projects ...
 }
 ```
 
@@ -91,12 +95,14 @@ Simplest way to remap resources is to do it directory-based, let's say you have 
 
 ```javascript
 routes: {
-    example: [
-        {
-            remote: 'http://www.example.com/resources/js',
-            local: 'c:\\git\\example\\src\\resources\\js\\'
-        }
-    ]
+    example: 
+        rewrite: [
+            {
+                remote: 'http://www.example.com/resources/js',
+                local: 'c:\\git\\example\\src\\resources\\js\\'
+            }
+        ]
+    }
 }
 ```
 
@@ -106,12 +112,14 @@ If you need more flexibility, you can also specify remote rules as regular expre
 
 ```javascript
 routes: {
-    example: [
-        {
-            remote: /^http:\/\/www.(example|stuff).com\/resources\/js\//,
-            local: 'c:\\git\\example\\src\\resources\\js\\'
-        }
-    ]
+    example:
+        rewrite: [
+            {
+                remote: /^http:\/\/www.(example|stuff).com\/resources\/js\//,
+                local: 'c:\\git\\example\\src\\resources\\js\\'
+            }
+        ]
+    }
 }
 ```
 
@@ -119,12 +127,14 @@ If you'd like to use [parenthesized substring matches](https://developer.mozilla
 
 ```javascript
 routes: {
-    example: [
-        {
-            remote: /^http:\/\/www.(example|stuff).com\/resources\/js\//,
-            local: 'c:\\git\\example\\src\\resources\\$1\\js\\'
-        }
-    ]
+    example:
+        rewrite: [
+            {
+                remote: /^http:\/\/www.(example|stuff).com\/resources\/js\//,
+                local: 'c:\\git\\example\\src\\resources\\$1\\js\\'
+            }
+        ]
+    }
 }
 ```
 Now, if your browser requests ```http://www.stuff.com/resources/js/underscore.js``` it will get it from ```c:\git\example\src\resources\stuff\js\underscore.js```
@@ -135,14 +145,16 @@ If you'd like to handle URL rewriting yourself, here's the way to do that:
 
 ```javascript
 routes: {
-    example: [
-        {
-            remote: 'http://www.example.com/resources/js',
-            local: function(remote) {
-                return remote.replace('http://www.example.com', '/usr/local');
+    example:
+        rewrite: [
+            {
+                remote: 'http://www.example.com/resources/js',
+                local: function(remote) {
+                    return remote.replace('http://www.example.com', '/usr/local');
+                }
             }
-        }
-    ]
+        ]
+    }
 }
 ```
 Function recieves one parameter which is full URL to remote resource and you can do whatever you want with it, just make sure your function returns a string.
@@ -155,18 +167,20 @@ When it gets remapped, it will point to ```c:\git\example\src\resources\js\under
 
 ```javascript
 routes: {
-    example: [
-        {
-            remote: 'http://www.example.com/resources/js',
-            local: 'c:\\git\\example\\src\\resources\\js\\'
+    example:
+        rewrite: [
+            {
+                remote: 'http://www.example.com/resources/js',
+                local: 'c:\\git\\example\\src\\resources\\js\\'
+            }
+        ],
+        fix: function(found) {
+            // remove revision version from found file name
+            if(found.indexOf('?revision=') > -1) {
+                found = found.slice(0, found.indexOf('?revision='));
+            }
+            return found;
         }
-    ],
-    fix: function(found) {
-        // remove revision version from found file name
-        if(found.indexOf('?revision=') > -1) {
-            found = found.slice(0, found.indexOf('?revision='));
-        }
-        return found;
     }
 }
 ```
