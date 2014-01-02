@@ -42,8 +42,10 @@ Use command line or terminal and run this command inside project directory: ```n
 ```node devproxy.js```
 
 If everything went fine, you should see two messages:
-```NOTICE: file server running on port 9000
-NOTICE: proxy server running on port 8000```
+```
+NOTICE: file server running on port 9000
+NOTICE: proxy server running on port 8000
+```
 
 ### 6. Tell the browser to proxy all traffic
 
