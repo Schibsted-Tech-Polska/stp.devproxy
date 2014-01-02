@@ -36,7 +36,7 @@ In your Git client clone this repository to whatever directory you'd like the pr
 Use command line or terminal and run this command inside project directory: ```npm install```
 
 ### 4. Configure stuff
-(See Configuration section)
+(See [Configuration](#configuration) section)
 
 ### 5. Run proxy server:
 ```node devproxy.js```
