@@ -97,14 +97,25 @@ httpProxy.createServer(function(req, res, proxy) {
 
     // not remapped or not found - serve from original host
     deferred.promise.catch(function(reason) {
-        log.warning(reason);
+
+        var port = 80,
+            host = req.headers.host;
+
+        if(req.headers.host.indexOf(':') !== -1) {
+            port = host.slice(host.indexOf(':') + 1);
+            host = host.slice(0, host.indexOf(':'));
+        }
+
+        if(reason) {
+            log.warning(reason);
+        }
+
         proxy.proxyRequest(req, res, {
-            host: req.headers.host,
-            port: 80,
+            host: host,
+            port: port,
             buffer: buffer
         });
     });
 
 }).listen(config.proxyPort);
 log.notice('proxy server running on port ' + config.proxyPort);
-

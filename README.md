@@ -58,7 +58,7 @@ Voila! From now on, each request will be checked against rules you've defined an
 
 # Configuration
 
-Open and edit config.js file to configure the tool. 
+Copy config.example.js file to config.js, then open and edit config.js to configure the tool. 
 
 ## Ports
 
