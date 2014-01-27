@@ -1,5 +1,5 @@
 /*
- * DevProxy v0.5.0
+ * DevProxy v0.6.0
  *
  *
  * The MIT License (MIT)
@@ -36,12 +36,13 @@ var httpProxy =     require('http-proxy'),
     config =        require('./config'),
     log =           require('./log'),
 
-    router = new Router(config.routes);
+    router = new Router(config.routes),
+    proxy = httpProxy.createServer({});
 
 
 // resources server
 http.createServer(function(req, res) {
-    var remapped = router.remap(req.url);
+    var remapped = router.remap('http://' + req.headers.host + req.url);
     fs.readFile(remapped, {
         encoding: 'utf8'
     }, function(err, data) {
@@ -62,12 +63,17 @@ http.createServer(function(req, res) {
 log.notice('file server running on port ' + config.httpPort);
 
 
+// proxy interceptor
+httpProxy.createServer({
+    target: 'http://127.0.0.1:' + config.proxyPort
+}); 
+
+
 // proxy server
-httpProxy.createServer(function(req, res, proxy) {
+http.createServer(function(req, res) {
 
     var remapped = router.remap(req.url),
-        deferred = Q.defer(),
-        buffer = httpProxy.buffer(req);
+        deferred = Q.defer();
 
     if(remapped) {
         fs.exists(remapped, function(exists) {
@@ -89,9 +95,7 @@ httpProxy.createServer(function(req, res, proxy) {
     // remapped and found - serve from local machine
     deferred.promise.then(function() {
         proxy.proxyRequest(req, res, {
-            host: '127.0.0.1',
-            port: config.httpPort,
-            buffer: buffer
+            target: 'http://127.0.0.1:' + config.httpPort
         });
     });
 
@@ -111,9 +115,7 @@ httpProxy.createServer(function(req, res, proxy) {
         }
 
         proxy.proxyRequest(req, res, {
-            host: host,
-            port: port,
-            buffer: buffer
+            target: 'http://' + host + ':' + port
         });
     });
 
