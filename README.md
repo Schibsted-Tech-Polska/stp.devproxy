@@ -51,7 +51,7 @@ NOTICE: proxy server running on port 8000
 
 Using Google Chrome as an example, install [Foxy Proxy](http://getfoxyproxy.org/chrome/standard/install.html).
 
-After installation, there should be a fox icon to the right of an address bar. Click it, choose Options and then Add New Proxy. In Host or IP Address field type 127.0.0.1 and in Port field type 8000 (assuming you haven't changed default configuration). Close the whole tab, click on fox icon again and choose option Use proxy "127.0.0.1:8000" for all URLs.
+After installation, there should be a fox icon to the right of an address bar. Click it, choose Options and then Add New Proxy. In Host or IP Address field put 127.0.0.1 and in Port field put 8000 (assuming you haven't changed default configuration). Switch to URL Patterns, click on Add new pattern, name it http and in URL pattern put http://* Then close the whole tab, click on fox icon again and choose option Use proxies based on their predefined patterns.
 Foxy Proxy allows for fast and easy switching between proxied and unproxied mode, use Disable FoxyProxy in dropdown menu to, well, disable FoxyProxy.
 
 Voila! From now on, each request will be checked against rules you've defined and if the URL matches, your browser will get local file instead of remote.
