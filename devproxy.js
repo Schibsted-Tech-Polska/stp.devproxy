@@ -1,5 +1,5 @@
 /*
- * DevProxy v0.6.0
+ * DevProxy v0.6.1
  *
  *
  * The MIT License (MIT)
@@ -42,22 +42,14 @@ var httpProxy =     require('http-proxy'),
 
 // resources server
 http.createServer(function(req, res) {
-    var remapped = router.remap('http://' + req.headers.host + req.url);
-    fs.readFile(remapped, {
-        encoding: 'utf8'
-    }, function(err, data) {
 
-        if(err) {
-            log.error(err);
-        }
+    var remapped = router.remap('http://' + req.headers.host + req.url),
+        mimeType = mime.lookup(remapped);
 
-        res.writeHead(200, {
-            'Content-Type': mime.lookup(remapped),
-            'Content-Length': Buffer.byteLength(data)
-        });
-
-        res.end(data);
+    res.writeHead(200, {
+        'Content-Type': mimeType
     });
+    fs.createReadStream(remapped).pipe(res);
 
 }).listen(config.httpPort);
 log.notice('file server running on port ' + config.httpPort);
