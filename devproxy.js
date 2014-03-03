@@ -1,10 +1,10 @@
 /*
- * DevProxy v0.6.1
+ * DevProxy v0.6.2
  *
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2013 Schibsted Tech Polska
+ * Copyright (c) 2013-2014 Schibsted Tech Polska
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
  * 
  */
 
+/*global Buffer */
+/*jshint globalstrict:true */
+
 'use strict';
 
 var httpProxy =     require('http-proxy'),
@@ -37,7 +40,27 @@ var httpProxy =     require('http-proxy'),
     log =           require('./log'),
 
     router = new Router(config.routes),
-    proxy = httpProxy.createServer({});
+    proxy = httpProxy.createServer({}),
+    interceptor = httpProxy.createServer({
+        target: 'http://127.0.0.1:' + config.proxyPort
+    }),
+
+    errorHandler = function(type) {
+        return function(err, req, res) {
+            log.error(type + ' ' + err);
+            res.writeHead(500, {
+                'Content-Type': 'text/plain'
+            });
+            res.end(type);
+        };
+    },
+    proxyError = errorHandler('Proxy'),
+    interceptorError = errorHandler('Intercepting proxy');
+
+
+// error handling
+proxy.on('error', proxyError);
+interceptor.on('error', interceptorError);
 
 
 // resources server
@@ -53,12 +76,6 @@ http.createServer(function(req, res) {
 
 }).listen(config.httpPort);
 log.notice('file server running on port ' + config.httpPort);
-
-
-// proxy interceptor
-httpProxy.createServer({
-    target: 'http://127.0.0.1:' + config.proxyPort
-}); 
 
 
 // proxy server
