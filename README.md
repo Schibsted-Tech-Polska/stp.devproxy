@@ -39,7 +39,7 @@ Use command line or terminal and run this command inside project directory: ```n
 (See [Configuration](#configuration) section)
 
 ### 5. Run proxy server:
-```node devproxy.js```
+Use ```npm start```
 
 If everything went fine, you should see two messages:
 ```
