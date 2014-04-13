@@ -7,7 +7,7 @@
         "colors": "0.6.x",
         "q": "0.9.x"
     },
-	"scripts": {
-		"start": "node ./devproxy.js"
-	}
+    "scripts": {
+        "start": "node ./devproxy.js"
+    }
 }

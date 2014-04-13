@@ -39,7 +39,7 @@ Use command line or terminal and run this command inside project directory: ```n
 (See [Configuration](#configuration) section)
 
 ### 5. Run proxy server:
-Use ```npm start```
+Run ```npm start``` command in repository root.
 
 If everything went fine, you should see two messages:
 ```
