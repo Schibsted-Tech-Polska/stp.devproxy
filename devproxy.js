@@ -1,5 +1,5 @@
 /*
- * DevProxy v0.6.2
+ * DevProxy v0.6.3
  *
  *
  * The MIT License (MIT)
@@ -24,9 +24,6 @@
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
  * 
  */
-
-/*global Buffer */
-/*jshint globalstrict:true */
 
 'use strict';
 
@@ -87,8 +84,22 @@ http.createServer(function(req, res) {
     if(remapped) {
         fs.exists(remapped, function(exists) {
             if(exists) {
-                // file remapped and found in filesystem
-                deferred.resolve();
+                fs.stat(remapped, function(err, stats) {
+                    
+                    if(err) {
+                        deferred.reject(err);
+                    }
+
+                    if(stats.isDirectory()) {
+                        // this is a directory, reject silently
+                        // there is no way to know upfront what directory index
+                        // is server configured to handle
+                        deferred.reject();
+                    }
+                    else {
+                        deferred.resolve();
+                    }
+                });
             }
             else {
                 // file remapped, but not found on local machine
