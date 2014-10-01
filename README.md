@@ -197,3 +197,4 @@ routes: {
 Everybody is invited to contribute, if you have an idea on how to improve/simplify this tool - awesome! :)
 
 Automated tests are written in Jasmine, using jasmine-node module, and can be found in spec directory. Before pushing any code, please write tests and make sure your changes did not break anything. If you're new to jasmine-node, [this short article](http://blog.codeship.io/2013/08/20/testing-tuesday-19-how-to-test-node-js-applications-with-jasmine.html) will get you on right track.
+To run tests use ```npm test``` command.

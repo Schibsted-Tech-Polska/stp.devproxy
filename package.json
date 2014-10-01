@@ -1,13 +1,25 @@
 {
     "name": "stp-devproxy",
     "version": "0.6.3",
+    "author": "Krystian Jarmicki <krystian.jarmicki@schibsted.pl>",
+    "license": "MIT",
+    "description": "Devproxy is a tool allowing you to serve resources from your local machine as if they came from the external server",
+    "main": "devproxy.js",
     "dependencies": {
         "mime": "1.2.x",
         "http-proxy": "1.0.x",
         "colors": "0.6.x",
         "q": "0.9.x"
     },
+    "devDependencies": {
+        "jasmine-node": "1.14.x"
+    },
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/Schibsted-Tech-Polska/stp.devproxy"
+    },
     "scripts": {
-        "start": "node ./devproxy.js"
+        "start": "node ./devproxy.js",
+        "test": "./node_modules/.bin/jasmine-node spec"
     }
 }
