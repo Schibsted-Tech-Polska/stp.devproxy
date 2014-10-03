@@ -1,5 +1,5 @@
 /*
- * DevProxy v0.6.3
+ * DevProxy v0.6.4
  *
  *
  * The MIT License (MIT)
@@ -45,14 +45,17 @@ var httpProxy =     require('http-proxy'),
     errorHandler = function(type) {
         return function(err, req, res) {
             log.error(type + ' ' + err);
-            res.writeHead(500, {
-                'Content-Type': 'text/plain'
-            });
-            res.end(type);
+            if(res) {
+                res.writeHead(500, {
+                    'Content-Type': 'text/plain'
+                });
+                res.end(type);
+            }
         };
     },
     proxyError = errorHandler('Proxy'),
-    interceptorError = errorHandler('Intercepting proxy');
+    interceptorError = errorHandler('Intercepting proxy'),
+    processError = errorHandler('Process');
 
 
 // error handling
@@ -141,3 +144,14 @@ http.createServer(function(req, res) {
 
 }).listen(config.proxyPort);
 log.notice('proxy server running on port ' + config.proxyPort);
+
+process.on('uncaughtException', function(e) {
+    var ignore = [
+        'ECONNRESET' // sometimes servers close connections unexpectedly, do not kill the process because of that
+    ];
+
+    if(ignore.indexOf(e.code) === -1) {
+        processError(e.code);
+        process.exit(1);
+    }
+});

@@ -1,6 +1,6 @@
 {
     "name": "stp-devproxy",
-    "version": "0.6.3",
+    "version": "0.6.4",
     "author": "Krystian Jarmicki <krystian.jarmicki@schibsted.pl>",
     "license": "MIT",
     "description": "Devproxy is a tool allowing you to serve resources from your local machine as if they came from the external server",
