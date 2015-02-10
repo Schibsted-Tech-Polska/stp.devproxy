@@ -1,5 +1,5 @@
 /*
- * DevProxy v0.6.4
+ * DevProxy v0.6.5
  *
  *
  * The MIT License (MIT)
@@ -31,7 +31,6 @@ var httpProxy =     require('http-proxy'),
     http =          require('http'),
     fs =            require('fs'),
     mime =          require('mime'),
-    Q =             require('q'),
     Router =        require('./router'),
     config =        require('./config'),
     log =           require('./log'),
@@ -82,48 +81,49 @@ log.notice('file server running on port ' + config.httpPort);
 http.createServer(function(req, res) {
 
     var remapped = router.remap(req.url),
-        deferred = Q.defer();
+        promise = new Promise(function(resolve, reject) {
+            if(remapped) {
+                fs.exists(remapped, function(exists) {
+                    if(exists) {
+                        fs.stat(remapped, function(err, stats) {
+                            
+                            if(err) {
+                                reject(err);
+                            }
 
-    if(remapped) {
-        fs.exists(remapped, function(exists) {
-            if(exists) {
-                fs.stat(remapped, function(err, stats) {
-                    
-                    if(err) {
-                        deferred.reject(err);
-                    }
-
-                    if(stats.isDirectory()) {
-                        // this is a directory, reject silently
-                        // there is no way to know upfront what directory index
-                        // is server configured to handle
-                        deferred.reject();
+                            if(stats.isDirectory()) {
+                                // this is a directory, reject silently
+                                // there is no way to know upfront what directory index
+                                // is server configured to handle
+                                reject();
+                            }
+                            else {
+                                resolve();
+                            }
+                        });
                     }
                     else {
-                        deferred.resolve();
+                        // file remapped, but not found on local machine
+                        reject('file not found: ' + remapped);
                     }
                 });
             }
             else {
-                // file remapped, but not found on local machine
-                deferred.reject('file not found: ' + remapped);
+                // file not remapped, no need to notify
+                reject();
             }
         });
-    }
-    else {
-        // file not remapped, no need to notify
-        deferred.reject();
-    }
+
 
     // remapped and found - serve from local machine
-    deferred.promise.then(function() {
+    promise.then(function() {
         proxy.proxyRequest(req, res, {
             target: 'http://127.0.0.1:' + config.httpPort
         });
     });
 
     // not remapped or not found - serve from original host
-    deferred.promise.catch(function(reason) {
+    promise.catch(function(reason) {
 
         var port = 80,
             host = req.headers.host;

@@ -13,7 +13,7 @@ Devproxy is a tool allowing you to serve resources from your local machine as if
 
 # Requirements:
 
-* Node.js
+* Node.js (version 0.12.0 or higher)
 * Git client
 * Browser capable of using proxy server
 
