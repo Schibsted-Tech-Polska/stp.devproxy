@@ -10,7 +10,7 @@
     },
     "dependencies": {
         "mime": "1.2.x",
-        "http-proxy": "1.0.x",
+        "http-proxy": "1.11.1",
         "colors": "0.6.x"
     },
     "devDependencies": {
